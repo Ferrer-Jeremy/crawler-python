@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+    application:
+        build: "python:latest"
+        volumes:
+            - ".:/src"
+        links:
+            - mysql
+
+    mysql:
+        image: mysql:5.7
+# not sure if usefull maybe for cli ?
+#        ports:
+#            - "3307:3306"
+        restart: always
+        volumes:
+            - "./docker/data/mysql/:/var/lib/mysql/"
+            - "./docker/log/mysql/:/var/log/mysql/"
+        environment:
+            MYSQL_DATABASE: leclerc
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_USER: "user"
+            MYSQL_PASSWORD: "user"
+
+# Comment phpmyadmin in PROD
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - "8072:80"
+        links:
+            - mysql:db
