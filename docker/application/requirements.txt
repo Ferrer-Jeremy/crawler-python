@@ -1,0 +1,4 @@
+scrapy
+mysql-connector
+selenium
+pyvirtualdisplay

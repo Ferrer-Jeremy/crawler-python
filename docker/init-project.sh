@@ -14,12 +14,13 @@ echoHeaderText () {
 echoHeaderText '(Re)creating Docker containers'
 docker-compose up -d --force-recreate
 
-echoHeaderText 'Composer install'
-docker-compose run --user="www-data" --rm application composer install --no-interaction
+docker-compose run --user="www-data" --rm application chmod +x docker/application/geckodriver
+#docker-compose run --user="www-data" --rm application xvfb-run &&
+#docker-compose run --user="www-data" --rm application bash export DISPLAY=:99
+
 
 echoHeaderText 'Initializing  databases'
-docker-compose run --user="www-data" --rm application chmod +x docker/database-init.sh
-docker-compose run --user="www-data" --rm application ./docker/database-init.sh
+docker-compose run --user="www-data" --rm application python3 docker/database-init.py
 
 echoHeaderText 'Docker containers'
 docker-compose ps

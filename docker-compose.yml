@@ -2,9 +2,9 @@ version: "3"
 
 services:
     application:
-        build: "python:latest"
+        build: docker/application/.
         volumes:
-            - ".:/src"
+            - ".:/var/www:rw"
         links:
             - mysql
 
@@ -18,10 +18,11 @@ services:
             - "./docker/data/mysql/:/var/lib/mysql/"
             - "./docker/log/mysql/:/var/log/mysql/"
         environment:
-            MYSQL_DATABASE: leclerc
-            MYSQL_ROOT_PASSWORD: "root"
             MYSQL_USER: "user"
             MYSQL_PASSWORD: "user"
+            MYSQL_DATABASE: crawler
+            MYSQL_ROOT_PASSWORD: "root"
+
 
 # Comment phpmyadmin in PROD
     phpmyadmin:
