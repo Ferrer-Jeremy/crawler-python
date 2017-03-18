@@ -8,7 +8,10 @@
 import scrapy
 
 
-class TutorialItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class YifySubtitles(scrapy.Item):
+    imdb_id = scrapy.Field()
+    title = scrapy.Field()
+    year = scrapy.Field()
+    language = scrapy.Field()
+    name = scrapy.Field()
+    file_urls = scrapy.Field()

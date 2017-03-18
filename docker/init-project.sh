@@ -20,7 +20,7 @@ docker-compose run --user="www-data" --rm application chmod +x docker/applicatio
 
 
 echoHeaderText 'Initializing  databases'
-docker-compose run --user="www-data" --rm application python3 docker/database-init.py
+#docker-compose run --user="www-data" --rm application python3 docker/database-init.py
 
 echoHeaderText 'Docker containers'
 docker-compose ps

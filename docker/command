@@ -1,0 +1,6 @@
+
+# start the craxl and save the date in *.json
+docker-compose run --user="www-data" --rm application scrapy crawl yify -o yify.json
+
+# open the shell
+docker-compose run --user="www-data" --rm application scrapy shell "http://www.yifysubtitles.com/"
