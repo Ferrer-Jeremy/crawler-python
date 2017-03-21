@@ -7,6 +7,8 @@ services:
             - ".:/var/www:rw"
         links:
             - mysql
+        environment:
+           - PYTHONUNBUFFERED=0 # for showing stdout in real time
 
     mysql:
         image: mysql:5.7

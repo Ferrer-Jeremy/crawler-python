@@ -66,7 +66,7 @@ CONCURRENT_REQUESTS = 16
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'tutorial.pipelines.YifyPipeline': 300,
+    #'tutorial.pipelines.YifyPipeline': 300,
     'tutorial.pipelines.YifyFilePipeline': 400,
 }
 

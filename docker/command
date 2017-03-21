@@ -4,3 +4,6 @@ docker-compose run --user="www-data" --rm application scrapy crawl yify -o yify.
 
 # open the shell
 docker-compose run --user="www-data" --rm application scrapy shell "http://www.yifysubtitles.com/"
+
+# Remove all containers
+docker-compose down --rmi=all

@@ -1,30 +1,34 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy.pipelines.files import FilePipeline
+from scrapy.pipelines.files import FilesPipeline
 import mysql.connector
 from mysql.connector import errorcode
-
 
 
 class YifyPipeline(object):
 
     def process_item(self, item, spider):
-        cursor = self.cnx.cursor()
-
         query_movie = ("SELECT id FROM movie WHERE imdb_id = %s")
-        cursor.execute(query_movie, item.get('imdb_id'))
+        query_add_movie = ("INSERT INTO movie (`imdb_id`, `title`, `year`) VALUES(%s, %s, %s)")
+        query_add_subtitle = ("INSERT INTO subtitle (`movie_id`, `name`, `language`) VALUES(%s, %s, %s)")
+
+        cursor = cnx.cursor()
+
+        save_movie_if_it_isnt(item, cursor)
+
+        return item
+
+    def save_movie_if_it_isnt(self, item, cursor):
+        try:
+            cursor.execute(query_movie, (item.get('imdb_id'),))
+        except mysql.connector.Error as err:
+            print(err)
 
         row = cursor.fetchone()
-
-        if row is None:  # Add the movie if it doesn't exist
-            query_add_movie = ("INSERT INTO movie (imdb_id, title, `year`) VALUES(%s, %s, %s)")
-            cursor.execute(query_add_movie, item.get('imdb_id'), item.get('title'), item.get('year'))
-            id = cursor.lastrowid
+        if row is None:
+            save_movie(item, cursor)
         else:
-            id = row
-
-        cursor.close()
-        return item
+            pass
 
     def open_spider(self, spider):
         config = {
@@ -47,15 +51,18 @@ class YifyPipeline(object):
         else:
             self.cnx.close()
 
+        if cnx.is_connected():
+            print('Connected to MySQL database')
+
     def close_spider(self, spider):
         self.cnx.close()
 
-class YifyFilePipeline(FilePipeline):
+
+class YifyFilePipeline(FilesPipeline):
 
     def get_media_requests(self, item, info):
-        for file_url in item['file_urls']:
+        for file_url in item.get('file_urls'):
             yield scrapy.Request(file_url)
 
     def item_completed(self, results, item, info):
-
         return item

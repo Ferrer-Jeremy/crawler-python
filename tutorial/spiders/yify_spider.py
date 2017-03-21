@@ -7,7 +7,6 @@ class YifySpider(scrapy.Spider):
     name = 'yify'
     start_urls = ['http://www.yifysubtitles.com/browse/page-1']
 
-
     def parse(self, response):
         for movie_link in response.xpath('/html/body/div/div/div[1]/ul/li'): # For each film
             urljoin = response.urljoin(movie_link.xpath('div[1]/a/@href').extract_first()) # Extract the link
