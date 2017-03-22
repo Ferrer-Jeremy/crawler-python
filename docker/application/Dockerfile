@@ -16,4 +16,6 @@ RUN apt-get update \
 ADD . /var/www
 WORKDIR /var/www
 RUN usermod -u 1000 www-data
+# We need to update pip
+# The requirement must be in a fixed version
 RUN pip install -r requirements.txt

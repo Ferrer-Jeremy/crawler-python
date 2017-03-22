@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.loader import ItemLoader
-from tutorial.items import YifySubtitles
+from tutorial.items import YifySubtitlesItem
+from tutorial.itemsLoader import YifySubtitlesItemLoader
 
 
 class YifySpider(scrapy.Spider):
@@ -31,7 +32,7 @@ class YifySpider(scrapy.Spider):
         name = response.xpath('/html/body/div/div/div/div/div[@style="margin-bottom:15px;"]/text()').extract_first().strip()
         file_urls = response.xpath('/html/body/div/div/div/div/div/a/@href').extract_first()
 
-        yifySubtitle = ItemLoader(item=YifySubtitles(), response=response)
+        yifySubtitle = YifySubtitlesItemLoader(item=YifySubtitlesItem(), response=response)
         yifySubtitle.add_value('imdb_id', imdb_id)
         yifySubtitle.add_value('title', title)
         yifySubtitle.add_value('year', year)

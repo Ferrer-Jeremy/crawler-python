@@ -8,7 +8,7 @@
 import scrapy
 
 
-class YifySubtitles(scrapy.Item):
+class YifySubtitlesItem(scrapy.Item):
     imdb_id = scrapy.Field()
     title = scrapy.Field()
     year = scrapy.Field()

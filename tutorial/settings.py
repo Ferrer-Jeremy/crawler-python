@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging
 
 # Scrapy settings for hhh project
 #
@@ -24,6 +25,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16
+
+LOG_LEVEL = logging.INFO
+LOG_FILE = 'logs/spider.log'
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
@@ -66,8 +70,8 @@ CONCURRENT_REQUESTS = 16
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    #'tutorial.pipelines.YifyPipeline': 300,
-    'tutorial.pipelines.YifyFilePipeline': 400,
+    'tutorial.pipelines.YifyPipeline': 300,
+    #'tutorial.pipelines.YifyFilePipeline': 400,
 }
 
 FILES_STORE = 'subtitles'
