@@ -26,8 +26,10 @@ ROBOTSTXT_OBEY = False
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16
 
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 LOG_FILE = 'logs/spider.log'
+
+FILES_URLS_FIELD = 'file_urls'
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
@@ -71,7 +73,7 @@ LOG_FILE = 'logs/spider.log'
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'tutorial.pipelines.YifyPipeline': 300,
-    #'tutorial.pipelines.YifyFilePipeline': 400,
+    'tutorial.pipelines.YifyFilePipeline': 400,
 }
 
 FILES_STORE = 'subtitles'

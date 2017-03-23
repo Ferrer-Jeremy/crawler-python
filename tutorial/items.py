@@ -15,3 +15,5 @@ class YifySubtitlesItem(scrapy.Item):
     language = scrapy.Field()
     name = scrapy.Field()
     file_urls = scrapy.Field()
+
+    id_subtitle = scrapy.Field()
