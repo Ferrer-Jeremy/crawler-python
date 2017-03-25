@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 22, 2017 at 08:45 PM
+-- Generation Time: Mar 24, 2017 at 09:31 PM
 -- Server version: 5.7.17
 -- PHP Version: 7.0.15
 
@@ -59,7 +59,8 @@ CREATE TABLE `subtitle` (
 ALTER TABLE `movie`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
-  ADD UNIQUE KEY `imdb_id` (`imdb_id`);
+  ADD UNIQUE KEY `imdb_id` (`imdb_id`),
+  ADD KEY `imdb_id_2` (`imdb_id`);
 
 --
 -- Indexes for table `subtitle`

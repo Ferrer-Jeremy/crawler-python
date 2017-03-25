@@ -39,7 +39,7 @@ class YifyPipeline(object):
         self.cursor.execute(self.query_add_movie, (item.get('imdb_id'), item.get('title'), item.get('year')))
 
         # Make a direcoty for this movie if it doesn't exist
-        movie_dir = os.path.join('subtitles', item.get('imdb_id')) # TODO: REPLACE SUBTITLE BY THE VARIABLE IN THE SETTINGS
+        movie_dir = os.path.join('subtitles', item.get('imdb_id'))  # TODO: REPLACE SUBTITLE BY THE VARIABLE IN THE SETTINGS
         # TODO: Log if we create a dir?
         if not os.path.exists(movie_dir):
             os.makedir(movie_dir)
@@ -47,7 +47,7 @@ class YifyPipeline(object):
         return self.cursor.lastrowid
 
     def save_subtitle(self, item, id_movie):
-        file_url = item.get('file_urls')[0] # there is only one
+        file_url = item.get('file_urls')[0]  # there is only one
         self.cursor.execute(self.query_add_subtitle, (id_movie, item.get('name'), item.get('language'), file_url))
 
         return self.cursor.lastrowid
@@ -97,7 +97,7 @@ class YifyFilePipeline(FilesPipeline):
         return [Request(x) for x in item.get(self.files_urls_field, [])]
 
     def file_path(self, request, response=None, info=None):
-        media_guid = self.item.get('id_subtitle') # TODO: the name of the file should be equal to the name of the subtitle + id of the subtitle -> slugify
+        media_guid = self.item.get('id_subtitle')  # TODO: the name of the file should be equal to the name of the subtitle + id of the subtitle -> slugify
         media_ext = os.path.splitext(request.url)[1]
         file_name = '%s%s' % (media_guid, media_ext)
 
@@ -105,5 +105,5 @@ class YifyFilePipeline(FilesPipeline):
 
     def item_completed(self, results, item, info):
         # TODO: save the hash of the file in the DB
-        # TODO: Check if the file already exist with the hash and if so delete it from file and DB but before add it's name to the alias(subtitle) table
+        # TODO: Check if the file already exist with the hash and if so delete it from file and DB but before add it's name to the alias(subtitle) table or extrat the file and rename it
         return item
