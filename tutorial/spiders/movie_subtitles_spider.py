@@ -3,23 +3,25 @@ from tutorial.items import YifySubtitlesItem
 from tutorial.itemsLoader import YifySubtitlesItemLoader
 
 
-class YifySpider(scrapy.Spider):
-    name = 'yify'
-    start_urls = ['http://www.yifysubtitles.com/browse/page-153']
+class MovieSubtitlesSpider(scrapy.Spider):
+    name = 'movie_subtitles'
+    start_urls = ['http://www.moviesubtitles.org/movies-A.html']
 
     def parse(self, response):
-        for movie_link in response.xpath('/html/body/div/div/div[1]/ul/li'): # For each film
-            urljoin = response.urljoin(movie_link.xpath('div[1]/a/@href').extract_first()) # Extract the link
+        for movie_link in response.xpath('//*[@id="content"]/div[3]/div/div[2]/a'): # For each film
+            urljoin = response.urljoin(movie_link.xpath('@href').extract_first()) # Extract the link
             yield scrapy.Request(urljoin, callback=self.parse_movie) # Follow the link
 
-        # next_page = response.xpath('/html/body/div/div/div/div/ul/li[last()]/a/@href').extract_first()  # Extract the button next
-        # if next_page is not None:
-        #     urljoin = response.urljoin(next_page)
-        #     yield scrapy.Request(urljoin, callback=self.parse)
+        for movie_list in response.xpath('//*[@id="content"]/div[3]/div/a'):  # For each page that list movies
+            urljoin = response.urljoin(movie_list.xpath('@href').extract_first()) # Extract the link
+            yield scrapy.Request(urljoin, callback=self.parse)
 
     def parse_movie(self, response):
-        for subtitle_link in response.xpath('/html/body/div/div/div/table/tbody/tr'):
-            urljoin = response.urljoin(subtitle_link.xpath('td[last()]/a/@href').extract_first()) # Extract link to download
+        for subtitle_link in response.xpath('/html/body/div/div/div[@class="left_articles"]/table/tr'):
+            if subtitle_link.xpath('td/a/@href') is None:  # if there no link -> it's not a subtitle so we skip
+                continue
+
+            urljoin = response.urljoin(subtitle_link.xpath('td/a/@href').extract_first()) # Extract link to download
             yield scrapy.Request(urljoin, callback=self.parse_subtitle)  # Follow the link
 
     def parse_subtitle(self, response):
