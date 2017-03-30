@@ -28,11 +28,9 @@ class YifyPipeline(object):
         row = self.cursor.fetchone()
 
         if row is None:
-
             return self.save_movie(item)
         else:
             id_movie = row[0]  # Take the id pos 0
-
             return id_movie
 
     def save_movie(self, item):
@@ -42,6 +40,7 @@ class YifyPipeline(object):
         movie_dir = os.path.join('subtitles', item.get('imdb_id'))  # TODO: REPLACE SUBTITLE BY THE VARIABLE IN THE SETTINGS
         # TODO: Log if we create a dir?
         if not os.path.exists(movie_dir):
+
             os.makedir(movie_dir)
 
         return self.cursor.lastrowid
