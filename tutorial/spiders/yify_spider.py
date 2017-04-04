@@ -1,6 +1,6 @@
 import scrapy
-from tutorial.items import YifySubtitlesItem
-from tutorial.itemsLoader import YifySubtitlesItemLoader
+from tutorial.items import SubtitlesItem
+from tutorial.itemsLoader import SubtitlesItemLoader
 
 
 class YifySpider(scrapy.Spider):
@@ -38,20 +38,20 @@ class YifySpider(scrapy.Spider):
 
         self.log_dict_item(item, response)
 
-        yify_subtitle = YifySubtitlesItemLoader(item=YifySubtitlesItem(), response=response)
-        yify_subtitle.add_value('imdb_id', item['imdb_id'])
-        yify_subtitle.add_value('title', item['title'])
-        yify_subtitle.add_value('year', item['year'])
-        yify_subtitle.add_value('language', item['language'])
-        yify_subtitle.add_value('name', item['name'])
-        yify_subtitle.add_value('file_urls', item['file_urls'])
-        yield yify_subtitle.load_item()
+        subtitle = SubtitlesItemLoader(item=SubtitlesItem(), response=response)
+        subtitle.add_value('imdb_id', item['imdb_id'])
+        subtitle.add_value('title', item['title'])
+        subtitle.add_value('year', item['year'])
+        subtitle.add_value('language', item['language'])
+        subtitle.add_value('name', item['name'])
+        subtitle.add_value('file_urls', item['file_urls'])
+        yield subtitle.load_item()
 
     def log_dict_item(self, item, response):
         for element in item.items():
             if element[1] is None or not element[1]:
                 if element[0] in self.optional_keys:
-                    self.logger.warning('Key : {} -- Value : {} -- Url : {}'.format(*element, response.url))
+                    self.logger.info('Key : {} -- Value : {} -- Url : {}'.format(*element, response.url))
                 else:
                     self.logger.error('Key : {} -- Value : {} -- Url : {}'.format(*element, response.url))
 

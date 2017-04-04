@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import logging
 
 # Scrapy settings for hhh project
@@ -72,8 +71,9 @@ FILES_URLS_FIELD = 'file_urls'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'tutorial.pipelines.YifyPipeline': 300,
-    'tutorial.pipelines.YifyFilePipeline': 400,
+    'tutorial.pipelines.yifyPipeline.YifyPipeline': 300,
+    'tutorial.pipelines.commonMySQLPipeline.MySQLPipeline': 400,
+    'tutorial.pipelines.commonFilesPipeline.SpecialFilesPipeline': 500,
 }
 
 FILES_STORE = 'subtitles'

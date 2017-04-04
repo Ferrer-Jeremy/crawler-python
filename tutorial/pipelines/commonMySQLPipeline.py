@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
 import scrapy
-from scrapy.pipelines.files import FilesPipeline
 import mysql.connector
 from mysql.connector import errorcode
-
 import os
-import os.path
-from scrapy.http import Request
 
 
-class YifyPipeline(object):
+class MySQLMoviePipeline(object):
     query_movie = ("SELECT id FROM movie WHERE imdb_id = %s")
     query_add_movie = ("INSERT INTO movie (`imdb_id`, `title`, `year`) VALUES(%s, %s, %s)")
     query_add_subtitle = ("INSERT INTO subtitle (`id_movie`, `name`, `language`, `path`) VALUES(%s, %s, %s, %s)")
@@ -36,11 +31,10 @@ class YifyPipeline(object):
     def save_movie(self, item):
         self.cursor.execute(self.query_add_movie, (item.get('imdb_id'), item.get('title'), item.get('year')))
 
-        # Make a direcoty for this movie if it doesn't exist
+        # Make a directory for this movie if it doesn't exist
         movie_dir = os.path.join('subtitles', item.get('imdb_id'))  # TODO: REPLACE SUBTITLE BY THE VARIABLE IN THE SETTINGS
         # TODO: Log if we create a dir?
         if not os.path.exists(movie_dir):
-
             os.makedir(movie_dir)
 
         return self.cursor.lastrowid
@@ -84,25 +78,8 @@ class YifyPipeline(object):
         except mysql.connector.Error as err:
             print(err)
 
+        print('Data commited')
         print('Deconnected of MySQL database')
         print('Close Spider')
 
 
-class YifyFilePipeline(FilesPipeline):
-
-    def get_media_requests(self, item, info):
-        self.item = item
-
-        return [Request(x) for x in item.get(self.files_urls_field, [])]
-
-    def file_path(self, request, response=None, info=None):
-        media_guid = self.item.get('id_subtitle')  # TODO: the name of the file should be equal to the name of the subtitle + id of the subtitle -> slugify
-        media_ext = os.path.splitext(request.url)[1]
-        file_name = '%s%s' % (media_guid, media_ext)
-
-        return os.path.join(self.item.get('imdb_id'), file_name)
-
-    def item_completed(self, results, item, info):
-        # TODO: save the hash of the file in the DB
-        # TODO: Check if the file already exist with the hash and if so delete it from file and DB but before add it's name to the alias(subtitle) table or extrat the file and rename it
-        return item

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 24, 2017 at 09:31 PM
+-- Generation Time: Apr 01, 2017 at 04:35 PM
 -- Server version: 5.7.17
 -- PHP Version: 7.0.15
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `crawler`
 --
-CREATE DATABASE IF NOT EXISTS `crawler` DEFAULT CHARACTER SET latin1 COLLATE latin1_general_ci;
-USE `crawler`;
 
 -- --------------------------------------------------------
 
@@ -29,25 +27,48 @@ USE `crawler`;
 --
 
 CREATE TABLE `movie` (
-  `id` int(11) NOT NULL,
-  `imdb_id` varchar(20) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `year` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` mediumint(8) UNSIGNED NOT NULL,
+  `id_imdb` int(7) UNSIGNED NOT NULL COMMENT 'prefix with tt',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `year` int(4) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subtitle`
+-- Table structure for table `movie__subtitle`
 --
 
-CREATE TABLE `subtitle` (
-  `id` int(11) NOT NULL,
-  `id_movie` int(11) NOT NULL,
-  `name` varchar(511) NOT NULL,
-  `language` varchar(255) NOT NULL,
-  `path` varchar(511) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `movie__subtitle` (
+  `id` mediumint(8) UNSIGNED NOT NULL,
+  `id_movie` mediumint(8) UNSIGNED NOT NULL,
+  `language` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie__subtitle_name`
+--
+
+CREATE TABLE `movie__subtitle_name` (
+  `id` mediumint(8) UNSIGNED NOT NULL,
+  `id_subtitle` mediumint(8) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie__subtitle_path`
+--
+
+CREATE TABLE `movie__subtitle_path` (
+  `id` mediumint(8) UNSIGNED NOT NULL,
+  `id_subtitle` mediumint(8) UNSIGNED NOT NULL,
+  `path` varchar(511) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -59,16 +80,29 @@ CREATE TABLE `subtitle` (
 ALTER TABLE `movie`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`),
-  ADD UNIQUE KEY `imdb_id` (`imdb_id`),
-  ADD KEY `imdb_id_2` (`imdb_id`);
+  ADD UNIQUE KEY `imdb_id` (`id_imdb`),
+  ADD KEY `imdb_id_2` (`id_imdb`);
 
 --
--- Indexes for table `subtitle`
+-- Indexes for table `movie__subtitle`
 --
-ALTER TABLE `subtitle`
+ALTER TABLE `movie__subtitle`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`),
   ADD KEY `id_movie` (`id_movie`);
+
+--
+-- Indexes for table `movie__subtitle_name`
+--
+ALTER TABLE `movie__subtitle_name`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_subtitle` (`id_subtitle`);
+
+--
+-- Indexes for table `movie__subtitle_path`
+--
+ALTER TABLE `movie__subtitle_path`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_subtitle` (`id_subtitle`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -78,21 +112,43 @@ ALTER TABLE `subtitle`
 -- AUTO_INCREMENT for table `movie`
 --
 ALTER TABLE `movie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `subtitle`
+-- AUTO_INCREMENT for table `movie__subtitle`
 --
-ALTER TABLE `subtitle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `movie__subtitle`
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `movie__subtitle_name`
+--
+ALTER TABLE `movie__subtitle_name`
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `movie__subtitle_path`
+--
+ALTER TABLE `movie__subtitle_path`
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `subtitle`
+-- Constraints for table `movie__subtitle`
 --
-ALTER TABLE `subtitle`
-  ADD CONSTRAINT `subtitle_ibfk_1` FOREIGN KEY (`id_movie`) REFERENCES `movie` (`id`);
+ALTER TABLE `movie__subtitle`
+  ADD CONSTRAINT `movie__subtitle_ibfk_1` FOREIGN KEY (`id_movie`) REFERENCES `movie` (`id`);
+
+--
+-- Constraints for table `movie__subtitle_name`
+--
+ALTER TABLE `movie__subtitle_name`
+  ADD CONSTRAINT `movie__subtitle_name_ibfk_1` FOREIGN KEY (`id_subtitle`) REFERENCES `movie__subtitle` (`id`);
+
+--
+-- Constraints for table `movie__subtitle_path`
+--
+ALTER TABLE `movie__subtitle_path`
+  ADD CONSTRAINT `movie__subtitle_path_ibfk_1` FOREIGN KEY (`id_subtitle`) REFERENCES `movie__subtitle` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
